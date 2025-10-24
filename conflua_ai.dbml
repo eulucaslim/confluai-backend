@@ -1,0 +1,91 @@
+Table Aluno {
+  id int [pk, increment]        
+  nome varchar(255)
+  cpf varchar(11) [null]
+  email varchar(255) 
+  telefone varchar(15) [null]
+  data_nascimento date [null]
+  empresa_id int [null]
+  created_at datetime
+}
+
+Table Matricula {
+  id int [pk, increment]
+  aluno_id int [not null]
+  turma_id int [not null]
+  fonte text
+  data_matricula date
+  Indexes {
+    (aluno_id, turma_id) [unique]  // evita duplicidade
+  }
+}
+
+Table Frequencia {
+    id int [pk, increment]
+    aula_id int [not null]
+    matricula_id int [not null]
+    presente bool [not null]
+    observacao text [null]
+}
+
+Table Curso {
+  id int [pk, increment]
+  nome varchar(255)
+  valor decimal(10,2)
+  descricao text
+  quant_dias int
+  created_at datetime
+}
+
+Table Aula {
+  id int [pk, increment]
+  turma_id int [not null]
+  data date [not null]
+  qr_code_path text
+}
+
+Table Turma {
+  id int [pk, increment]
+  curso_id int
+  localidade varchar(255)
+  data_inicio date
+  data_fim date
+  created_at datetime
+}
+
+Table TurmaAluno {
+  id int [pk, increment]
+  turma_id int
+  aluno_id int
+}
+
+Table Empresa {
+    id int [pk, increment]
+    nome varchar(100)
+    cnpj varchar(14) [null]
+    tipo_inscricao varchar(13) [null]
+    endereco varchar(150) [null]
+    optante_simp_nacional bool [null]
+}
+
+Table Pagamento {
+  id int [pk, increment]
+  aluno_id int
+  curso_id int
+  status varchar(50)
+  created_at datetime
+}
+
+// ------------------- RELACIONAMENTOS -------------------
+
+Ref: Pagamento.aluno_id > Aluno.id
+Ref: Pagamento.curso_id > Curso.id
+Ref: Aula.turma_id > Turma.id
+Ref: Frequencia.matricula_id > Matricula.id
+Ref: Frequencia.aula_id > Aula.id
+Ref: Matricula.aluno_id > Aluno.id
+Ref: Matricula.turma_id > Turma.id
+Ref: Turma.curso_id > Curso.id
+Ref: Aluno.empresa_id > Empresa.id
+Ref: TurmaAluno.turma_id > Turma.id
+Ref: TurmaAluno.aluno_id > Aluno.id
