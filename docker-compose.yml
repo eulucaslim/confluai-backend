@@ -1,0 +1,33 @@
+services:
+  db:
+    container_name: postgres-db
+    image: postgres
+    environment:
+        POSTGRES_USER: ${DB_USER} # Replace with your desired username
+        POSTGRES_PASSWORD: ${DB_PASSWORD} # Replace with your desired password
+        POSTGRES_DB: ${DB_NAME} # Optional: specify a default database name
+    ports:
+      - "${DB_PORT}:5432"
+    networks:
+      - conflu_network
+  conflu:
+    build: .
+    container_name: conflu
+    command: ["python", "manage.py", "runserver", "0.0.0.0:${CONFLU_PORT}"]
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=db
+      - DB_PORT=${DB_PORT}
+    ports:
+      - "${CONFLU_PORT}:${CONFLU_PORT}"
+    networks:
+      - conflu_network
+    depends_on:
+      - db
+
+networks:
+  conflu_network:
+    driver: bridge
