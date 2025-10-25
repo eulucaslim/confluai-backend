@@ -18,7 +18,7 @@ class AlunoViewSet(viewsets.ViewSet):
                     "nome": aluno.nome,
                     "cpf": aluno.cpf,
                     "email": aluno.email,
-                    "empresa_id": aluno.empresa_id,
+                    "empresa_id": aluno.empresa_id.id,
                     "telefone": aluno.telefone,
                     "data_nascimento": aluno.data_nascimento
                 } for aluno in alunos]
